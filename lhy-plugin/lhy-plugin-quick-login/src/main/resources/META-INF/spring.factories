@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=top.lhy.plugin.quick.filter.SaTokenConfigure,\
+  top.lhy.plugin.quick.config.QuickLoginConfig,\
+  top.lhy.plugin.quick.controller.QuickLoginController

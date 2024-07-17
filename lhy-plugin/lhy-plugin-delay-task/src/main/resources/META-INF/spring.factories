@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=top.lhy.plugin.delay.manger.DelayQueueManager
