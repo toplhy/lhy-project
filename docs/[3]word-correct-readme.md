@@ -25,5 +25,5 @@ public class Main {
 }
 ```
 + 其他说明
-1. 模型下载地址：https://huggingface.co/shibing624/macbert4csc-base-chinese
-2. huggingace无法打开：https://hf-mirror.com/shibing624/macbert4csc-base-chinese
+1. 模型下载地址：https://hf-mirror.com/shibing624/macbert4csc-base-chinese/resolve/main/onnx/model.onnx?download=true
+2. 将下载的模型放置于resources目录下
