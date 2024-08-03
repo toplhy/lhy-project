@@ -16,6 +16,7 @@
     <modules>
         <module>lhy-plugin-quick-login</module>
         <module>lhy-plugin-delay-task</module>
+        <module>lhy-plugin-word-correct</module>
     </modules>
 
     <dependencies>

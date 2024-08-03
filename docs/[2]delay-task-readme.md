@@ -3,7 +3,7 @@
 
 #### 集成步骤
 + 添加依赖
-```
+```xml
 <dependency>
     <groupId>top.lhy</groupId>
     <artifactId>lhy-plugin-delay-task</artifactId>
@@ -11,7 +11,7 @@
 </dependency>
 ```
 + 注入DelayQueueManager
-```
+```java
 @RestController
 public class TestController {
 

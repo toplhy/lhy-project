@@ -3,7 +3,7 @@
 
 #### 集成步骤
 + 在项目中添加依赖
-```
+```xml
 <dependency>
     <groupId>top.lhy</groupId>
     <artifactId>lhy-plugin-quick-login</artifactId>
@@ -11,7 +11,7 @@
 </dependency>
 ```
 + 配置文件
-```
+```yaml
 lhy:
   quick:
     name: admin     # 用户名，默认admin
