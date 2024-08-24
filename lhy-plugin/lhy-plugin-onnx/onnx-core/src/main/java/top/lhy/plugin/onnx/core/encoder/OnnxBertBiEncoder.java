@@ -1,21 +1,19 @@
-package top.lhy.plugin.correct.onnx;
+package top.lhy.plugin.onnx.core.encoder;
 
 import ai.djl.huggingface.tokenizers.Encoding;
 import ai.djl.huggingface.tokenizers.HuggingFaceTokenizer;
-import ai.djl.modality.nlp.bert.BertFullTokenizer;
-import ai.onnxruntime.*;
+import ai.onnxruntime.OnnxTensor;
+import ai.onnxruntime.OrtEnvironment;
+import ai.onnxruntime.OrtException;
+import ai.onnxruntime.OrtSession;
 import ai.onnxruntime.OrtSession.Result;
-import org.apache.commons.lang3.StringUtils;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.factory.Nd4j;
-import top.lhy.plugin.correct.domain.CorrectDetail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static ai.onnxruntime.OnnxTensor.createTensor;
 import static java.nio.LongBuffer.wrap;
@@ -59,49 +57,7 @@ public class OnnxBertBiEncoder {
         }
     }
 
-    public CorrectDetail correct(String text) {
-        String originText = stringHandle(text);
-        String correctText = "";
-        // 调用模型进行结纠错
-        try (Result result = encode(originText)) {
-            float[][] vectors = ((float[][][]) result.get(0).getValue())[0];
-            INDArray indArrayLabels = Nd4j.create(vectors);
-            INDArray index = Nd4j.argMax(indArrayLabels, -1);
-            long[] predIndex = index.toLongVector();
-            correctText = stringHandle(tokenizer.decode(predIndex, true));
-        } catch (OrtException ignore) {
-            correctText = originText;
-        }
-        // 封装纠错结果
-        return buildCorrectDetail(originText, correctText);
-    }
-
-    private String stringHandle(String text) {
-        return Pattern.compile("\\s+").splitAsStream(text).collect(Collectors.joining());
-    }
-
-    private CorrectDetail buildCorrectDetail(String originText, String correctText) {
-        CorrectDetail.CorrectDetailBuilder builder = CorrectDetail.builder();
-        builder.originText(originText).correctText(correctText);
-        builder.resultCorrect(!originText.equals(correctText));
-        List<Map<String, Object>> details = new ArrayList<>();
-        for (int i = 0; i < originText.length(); i++) {
-            String oriChar = originText.substring(i, i+1);
-            String corChar = correctText.substring(i, i+1);
-            if(!oriChar.equalsIgnoreCase(corChar)) {
-                Map<String, Object> detail = new HashMap<>();
-                detail.put("index", i);
-                detail.put("originChar", oriChar);
-                detail.put("correctChar", corChar);
-                details.add(detail);
-            }
-        }
-        builder.details(details);
-        return builder.build();
-    }
-
-
-    private Result encode(String text) throws OrtException {
+    public Result encode(String text) throws OrtException {
 
         Encoding encoding = tokenizer.encode(text, true, false);
 
@@ -126,5 +82,25 @@ public class OnnxBertBiEncoder {
 
             return session.run(inputs);
         }
+    }
+
+    public String decode(long[] ids) {
+        return tokenizer.decode(ids, true);
+    }
+
+    public OrtEnvironment getEnvironment() {
+        return environment;
+    }
+
+    public OrtSession getSession() {
+        return session;
+    }
+
+    public Set<String> getExpectedInputs() {
+        return expectedInputs;
+    }
+
+    public HuggingFaceTokenizer getTokenizer() {
+        return tokenizer;
     }
 }

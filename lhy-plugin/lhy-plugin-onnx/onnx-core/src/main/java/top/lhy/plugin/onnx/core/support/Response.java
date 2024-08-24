@@ -1,4 +1,4 @@
-package top.lhy.plugin.correct.support;
+package top.lhy.plugin.onnx.core.support;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

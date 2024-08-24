@@ -1,4 +1,4 @@
-package top.lhy.plugin.correct.domain;
+package top.lhy.plugin.onnx.correct.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
